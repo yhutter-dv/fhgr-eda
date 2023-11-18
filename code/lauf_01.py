@@ -46,7 +46,8 @@ Grafik als png-file ab.
 plt.figure(3)
 distance_m = distance * 1000
 velocities_m_per_second = distance_m / time_sec_accumulated
-plt.axis([0, 10500, velocities_m_per_second.min() - 0.2 , velocities_m_per_second.max() + 0.2])
+plt.axis([0, 10500, velocities_m_per_second.min() -
+         0.2, velocities_m_per_second.max() + 0.2])
 plt.xticks(distance_m)
 plt.plot(distance_m, velocities_m_per_second, "ro-")
 plt.xlabel("Distance in meters")
