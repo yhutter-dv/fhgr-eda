@@ -22,8 +22,12 @@ t_sec_total = 60 * t_min + t_sec
 
 t_std_sec = np.std(t_sec_total, 1)
 t_sum_sec = np.sum(t_sec_total, 1)
+model = np.polyfit(t_sum_sec / 60, t_std_sec, 1)
+m, t = model
+print(m, t)
 
 plt.plot(t_sum_sec / 60, t_std_sec, 'o')
+plt.plot(t_sum_sec / 60, (t_sum_sec / 60) * m + t, 'r')
 plt.xlabel("Time in minutes")
 plt.ylabel("Standard Deviation")
 plt.title("Standard Deviation over Time")

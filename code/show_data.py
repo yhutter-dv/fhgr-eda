@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def show_data(x = [], number_of_bins = 5, title = "", x_axis_title = "", y_axis_title = ""):
+def show_data(x=[], number_of_bins=5, title="", x_axis_title="", y_axis_title=""):
     number_of_elements = len(x)
     max_value = np.round(max(x), 2)
     min_value = np.round(min(x), 2)
@@ -24,7 +24,7 @@ def show_data(x = [], number_of_bins = 5, title = "", x_axis_title = "", y_axis_
 
     plt.grid()
     plt.plot(x, 'o')
-   
+
     # Create textbox with useful information.
     # see https://matplotlib.org/stable/gallery/text_labels_and_annotations/placing_text_boxes.html
     ax = plt.gca()
@@ -36,7 +36,8 @@ def show_data(x = [], number_of_bins = 5, title = "", x_axis_title = "", y_axis_
         f"Median: {median}",
         f"Min: {min_value}"
     ])
-    ax.text(0.05, 0.95, content, transform = ax.transAxes, fontsize = 14, verticalalignment='top', bbox=props)
+    ax.text(0.05, 0.95, content, transform=ax.transAxes,
+            fontsize=14, verticalalignment='top', bbox=props)
 
     plt.subplot(212)
 
@@ -53,12 +54,13 @@ def show_data(x = [], number_of_bins = 5, title = "", x_axis_title = "", y_axis_
         f"Quantile 25: {quant_25}",
         f"Quantile 75: {quant_75}"
     ])
-    ax.text(0.05, 0.95, content, transform = ax.transAxes, fontsize = 14, verticalalignment='top', bbox=props)
+    ax.text(0.05, 0.95, content, transform=ax.transAxes,
+            fontsize=14, verticalalignment='top', bbox=props)
 
     plt.show()
 
 
-
 if __name__ == "__main__":
-    x = np.array([12.1, 12.5, 12.4, 11.9, 12.5, 12.8, 12.3, 12.5, 12.2, 12.9, 13.1, 12.5, 12.8, 12.3])
+    x = np.array([12.1, 12.5, 12.4, 11.9, 12.5, 12.8, 12.3,
+                 12.5, 12.2, 12.9, 13.1, 12.5, 12.8, 12.3])
     show_data(x, 5)
