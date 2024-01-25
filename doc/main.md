@@ -11,9 +11,6 @@ author:
 lang: de
 date: "22.01.2024"
 lof: true
-lot: true
-bibliography: references.bib
-csl: apastyle.csl
 mainfont: Liberation Sans
 sansfont: Liberation Sans
 monofont: JetBrains Mono
@@ -88,6 +85,7 @@ Mathematische Verfahren welche aufzeigen, wie **stark die Daten schwanken**:
 
 * Für Daten, die *halbwegs gleich verteilt* sind, ergeben Median/Qantil ungefähr dieselben Aussagen wie Mittelwert und Standardabweichung
 * Für Daten, die ein oder mehrere deutliche "Ausreisser" aufweisen, also nicht gleich verteilt sind, ergeben Median/Qantil verschiedene Aussagen wie Mittelwert /Standardabweichung
+* Wenn es "Lücken" (keine kompakte Verteilung der Daten) hat, gibt es einen grossen Unterschied zwischen Median und Mittelwert
 
 \newpage
 ### Standardverfahren
@@ -135,7 +133,8 @@ $$ std(x) = \rho(x) = \sqrt{var(x)} $$
 
 Quantile können schiefe Verteilungen (skewness) erkennen.
 
-TODO
+* Ein Quantil von 25% bedeutet, dass rund 25% der Daten unter diesem Wert liegen und 75% darüber
+* Ein Quantil von 75% bedeutet, dass rund 75% der Daten unter diesem Wert liegen und 25% darüber
 
 **Kovarianz**
 
@@ -260,7 +259,69 @@ Der Anfang und das Ende der Daten muss separat behandelt werden:
 \newpage
 # Praxis
 
+## Numpy
+
+### Aufsummierte Summe bilden
+Die aufsummierte Summe kann über den Befehl `cumsum` gebildet werden
+
+```python
+seconds_total_sum = seconds_total.cumsum()
+```
+
+Es ist auch möglich diese Zeilen oder Spaltenweise zu bilden (hilfreich bei mehrdimensionalen Arrays).
+
+```python
+seconds_total_sum = seconds_total.cumsum(1) # Spaltenweise
+seconds_total_sum = seconds_total.cumsum(0) # Zeilenweise
+```
+
+### Standardwerte berechnen
+
+```python
+median = np.median(x)
+max_value = max(x)
+min_value = min(x)
+mean = np.mean(x)
+quant_25 = np.quantile(x, 0.25)
+quant_75 = np.quantile(x, 0.75)
+std = np.std(x)
+variance = np.var(x)
+```
+
+### Bestimmtheitsmass berechnen
+```python
+rho = np.corrcoef(schuhgroesse,koerperlaenge)
+bestimmtheit = rho**2
+```
+
+### CSV Dateien laden
+
+```python
+height = np.loadtxt("./data/nba.csv", delimiter=",", usecols=(1), skiprows=1) # dtype="U" means Unicode String
+```
+
+\newpage
+### Bestimmte Werte filtern
+Werte können mit dem `np.where` Befehl gefiltert werden.
+
+```python
+none_empty_values_indices = np.where(price_str != ".")
+number_of_indices = len(none_empty_values_indices[0])
+price = np.zeros(number_of_indices)
+
+for i in range(number_of_indices):
+    index = none_empty_values_indices[0][i]
+    price[i] = float(price_str[index])
+```
+
 ## Matplotlib
+
+### Grafik als Bild abspeichern
+```python
+plt.savefig("./myImage.png")
+```
+> Achtung: Vorher kein `.plot()` Befehl ausführen da sonst das Bild nicht gespeichert wird.
+
 
 ### Darstellung einer Gerade
 Eine einfache Gerade kann umgeben von einer Punktewolke mit Abstand $r$ zur Gerade kann folgendermassen dargestellt werden
@@ -277,12 +338,95 @@ plt.plot(x,y,'o',markersize=1)
 ```
 
 ### Ausgleichsgerade
-Eine Ausgleichsgerade kann mit folgendem Befehl erzeugt werden:
+Eine Ausgleichsgerade kann mit dem Befehl `polyfit` erzeugt werden:
 
 ```python
-np.polyfit()
+y_model = np.polyfit(seconds_total_per_runner, seconds_total_standard_deviation, 1)
+m = y_model[0]
+t = y_model[1]
+plt.plot(seconds_total_per_runner, m * seconds_total_per_runner + t, 'r')
 ```
-
+\newpage
+### Balkendiagramm zeichnen
+```python
+...
+plt.title("Alexander Schnell")
+plt.axis([0, 10, 0, 250])
+plt.bar(km - 0.5, time_seconds_total, edgecolor=(0, 0, 0), width=1)
+plt.xticks(km)
+plt.xlabel("Strecke in km")
+plt.ylabel("Zwischenzeit in s")
+plt.show()
+```
+![Balkendiagramm](./images/ueb_lauf_01.png){ height=300px }
 
 \newpage
-# Quellenverzeichnis
+### Liniendiagramm zeichnen
+```python
+...
+plt.figure(2)
+plt.axis([0, 11, 0, 35])
+plt.xticks(km)
+plt.plot(km - 0.5, time_seconds_total_sum / 60, "ro-")
+plt.xlabel("Strecke in km")
+plt.ylabel("Zeit in min")
+plt.show()
+```
+
+![Liniendiagramm](./images/ueb_lauf_01_line.png){ height=300px }
+
+### Legende erzeugen
+Eine Legende kann mit dem `legend` Befehl erzeugt werden:
+
+```python
+for i, name in enumerate(names):
+        plt.plot(np.append(0, km), np.append(0, seconds_total_sum[i] / 60.0), "o-")
+plt.legend(names, loc="center left")
+```
+
+\newpage
+### Grid erzeugen
+Ein Grid kann mit dem Befehl `grid` erzeugt werden
+
+```python
+plt.grid(visible=True)
+```
+### Heatmap erzeugen
+Eine Heatmap kann mit dem Befehl `pcolor` erzeugt werden
+
+```python
+correlation_matrix = np.corrcoef(seconds_total)
+plt.figure()
+plt.pcolor(correlation_matrix)
+plt.pcolor(correlation_matrix > 0.95)
+plt.show()
+```
+### Abstandsmatrix berechnen
+
+```python
+def difference(a, b):
+        result = (a - b) ** 2
+        result = sum(result)
+        result = np.sqrt(result)/len(b)
+        return result
+
+matrix = np.zeros((7, 7))
+for i in range(len(names)):
+    for j in range(len(names)):
+        matrix[i, j] = difference(seconds_total[i], seconds_total[j])
+plt.figure()
+plt.pcolor(matrix)
+plt.pcolor(matrix < 0.3)
+```
+
+### Gleitender Symmetrischer Mittelwertsfilter
+
+```python
+def moving_average(a, n):
+    l=len(a)
+    s=int((n-1)/2)
+    b=np.zeros(l)
+    for i in range(s,l-1-s):
+        b[i] = sum(a[i-s:i+s+1])/n
+    return b
+```

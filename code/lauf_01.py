@@ -1,65 +1,44 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-"""
-Übertragen Sie die Messwerte in 1D-Arrays in Python. Es hat sich vermutlich ein Datenübertragungs- oder Mess-Fehler eingeschlichen. Korrigieren Sie diesen mit Hilfe einer sinnvollen
-Annahme.
-"""
-distance = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-time_min = np.array([2, 3, 3, 3, 3, 3, 3, 3, 3, 3])
-time_sec = np.array([58, 12, 1, 22, 11, 38, 28, 21, 19, 35])
-time_sec_total = 60 * time_min + time_sec
-time_sec_accumulated = time_sec_total.cumsum()
+if __name__ == "__main__":
+	km = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+	time_minutes = np.array([2, 3, 3, 3, 3, 3, 3, 3, 3, 3])
+	time_seconds = np.array([58, 12, 1, 22, 11, 38, 28, 21, 19, 35])
+	time_seconds_total = time_minutes * 60 + time_seconds
+	time_seconds_total_sum = time_seconds_total.cumsum()
+	m = km * 1000.0
+	m_s = m / time_seconds_total
 
-"""
-Erzeugen Sie mit matplotlib den exakt selben, wie untenstehenden, Bar-Plot mit
-den Zeitintervallen
-"""
-plt.figure(1)
-plt.bar(distance - 0.5, time_sec_total, edgecolor=(0, 0, 0), width=1)
-plt.axis([0, 10, 0, 250])
-plt.xticks(distance)
-plt.xlabel("Distance travelled in kilometer")
-plt.ylabel("Time in Seconds")
-plt.title("Alexander Schnell")
-plt.savefig("./images/lauf_01_bar.png")
+	plt.figure(1)
+	plt.title("Alexander Schnell")
+	plt.axis([0, 10, 0, 250])
+	plt.bar(km - 0.5, time_seconds_total, edgecolor=(0, 0, 0), width=1)
+	plt.xticks(km)
+	plt.xlabel("Strecke in km")
+	plt.ylabel("Zwischenzeit in s")
+	plt.show()
 
+	plt.figure(2)
+	plt.axis([0, 11, 0, 35])
+	plt.xticks(km)
+	plt.plot(km - 0.5, time_seconds_total_sum / 60, "ro-")
+	plt.xlabel("Strecke in km")
+	plt.ylabel("Zeit in min")
+	plt.show()
 
-"""
-Erzeugen Sie mit matplotlib den exakt selben, wie untenstehenden, Linien-Plot
-mit den aufsummierten Zwischenzeiten.
-"""
-plt.figure(2)
-plt.axis([0, 10, 0, 2050])
-plt.xticks(distance)
-plt.plot(distance, time_sec_accumulated, "ro-")
-plt.xlabel("Distance in kilometer")
-plt.ylabel("Time in Seconds")
-plt.title("Alexander Schnell")
-plt.savefig("./images/lauf_02_line.png")
+	plt.figure(3)
+	plt.axis([0, 11, 0, 50])
+	plt.xticks(km)
+	plt.plot(km, m_s, "ro-")
+	plt.xlabel("Strecke in km")
+	plt.ylabel("Geschwindigkeit in m/s")
+	plt.savefig("./images/durchschnittsgeschwindigkeit.png")
 
-"""
-Berechnen Sie die mittleren Geschwindigkeiten auf jedem Streckenabschnitt. Stellen Sie diese als Linienplot dar. Wählen Sie die Skalierung der Achsen geeignet. Speichern Sie die
-Grafik als png-file ab.
-"""
-
-plt.figure(3)
-distance_m = distance * 1000
-velocities_m_per_second = distance_m / time_sec_accumulated
-plt.axis([0, 10500, velocities_m_per_second.min() -
-         0.2, velocities_m_per_second.max() + 0.2])
-plt.xticks(distance_m)
-plt.plot(distance_m, velocities_m_per_second, "ro-")
-plt.xlabel("Distance in meters")
-plt.ylabel("Velocity in meter per seconds")
-plt.title("Alexander Schnell")
-plt.savefig("./images/lauf_02_line_velocity.png")
+	plt.figure(4)
+	plt.hist(m_s, bins=6, edgecolor=(0, 0, 0))
+	plt.savefig("./images/durchschnittsgeschwindigkeit_histogramm.png")
+	plt.show()
 
 
-"""
-Erzeugen Sie Histogramm mit 6 bins und speichern dieses ab.
-"""
-plt.figure(4)
-plt.hist(velocities_m_per_second, bins=6, edgecolor=(0, 0, 0))
-plt.savefig("./images/lauf_02_hist_velocity.png")
-plt.show()
+
