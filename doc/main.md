@@ -9,7 +9,7 @@ title: Prüfungsvorbereitung EDA
 author:
 - Yannick Hutter 
 lang: de
-date: "22.01.2024"
+date: "26.01.2024"
 lof: true
 mainfont: Liberation Sans
 sansfont: Liberation Sans
@@ -316,6 +316,13 @@ for i in range(number_of_indices):
 
 ## Matplotlib
 
+### Betrag eines Vektors berechnen
+
+```python
+def vector_magnitude(x):
+    return np.sqrt(sum(x ** 2))
+```
+
 ### Grafik als Bild abspeichern
 ```python
 plt.savefig("./myImage.png")
@@ -346,7 +353,7 @@ m = y_model[0]
 t = y_model[1]
 plt.plot(seconds_total_per_runner, m * seconds_total_per_runner + t, 'r')
 ```
-\newpage
+
 ### Balkendiagramm zeichnen
 ```python
 ...

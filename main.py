@@ -26,6 +26,9 @@ def show_data(x, bins):
 	plt.grid(visible=True)	
 	plt.show()
 
+def vector_magnitude(x):
+	return np.sqrt(sum(x ** 2))
+
 def moving_average(a, n):
     l=len(a)
     s=int((n-1)/2)
@@ -39,3 +42,7 @@ if __name__ == "__main__":
 	show_data(data, 3)
 	data_average = moving_average(data, 3)
 	show_data(data_average, 3)
+
+	vector = np.array([1, 2, 0])
+	magnitude = vector_magnitude(vector)
+	print(f"Magnitude of Vector {vector} is {magnitude}")
