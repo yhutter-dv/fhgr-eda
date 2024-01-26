@@ -289,18 +289,22 @@ variance = np.var(x)
 ```
 
 ### Bestimmtheitsmass berechnen
+In der Statistik bezieht sich das Bestimmtheitsmass auf eine Größe, die angibt, wie gut ein statistisches Modell die Variationen der abhängigen Variable erklären kann.
+
+* Ein Wert von beispielsweise 0.75 würde bedeuten, dass 75% der Variation in der abhängigen Variable durch das Modell erklärt werden können, während die restlichen 25% auf andere Faktoren zurückzuführen sind
+
 ```python
 rho = np.corrcoef(schuhgroesse,koerperlaenge)
 bestimmtheit = rho**2
 ```
 
+\newpage
 ### CSV Dateien laden
 
 ```python
 height = np.loadtxt("./data/nba.csv", delimiter=",", usecols=(1), skiprows=1) # dtype="U" means Unicode String
 ```
 
-\newpage
 ### Bestimmte Werte filtern
 Werte können mit dem `np.where` Befehl gefiltert werden.
 
@@ -330,6 +334,7 @@ plt.savefig("./myImage.png")
 > Achtung: Vorher kein `.plot()` Befehl ausführen da sonst das Bild nicht gespeichert wird.
 
 
+\newpage
 ### Darstellung einer Gerade
 Eine einfache Gerade kann umgeben von einer Punktewolke mit Abstand $r$ zur Gerade kann folgendermassen dargestellt werden
 
@@ -353,6 +358,19 @@ m = y_model[0]
 t = y_model[1]
 plt.plot(seconds_total_per_runner, m * seconds_total_per_runner + t, 'r')
 ```
+
+Die Ausgleichsgerade kann mithilfe des **Korrelationskoeffizienten** noch genauer analysiert werden.
+
+```text
+[[1.         0.96106918]
+[0.96106918 1.        ]]
+```
+Dieser Korrelationskoeffizient in Bezug auf untenstehende Grafik würde aussagen dass:
+
+* Die Ausgleichsgerade erklärt die Schuhgrösse auf Basis der Körperlänge im Mittel zu 96%
+
+![Ausgleichsgerade](./images/linear_regression.png){ height="150px" }
+
 
 ### Balkendiagramm zeichnen
 ```python

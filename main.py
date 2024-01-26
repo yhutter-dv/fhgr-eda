@@ -37,6 +37,27 @@ def moving_average(a, n):
         b[i] = sum(a[i-s:i+s+1])/n
     return b
 
+def scatter_with_linear_regression(a, b, xlabel, ylabel):
+	plt.figure()
+	plt.plot(a, b, 'o')
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+	plt.grid()
+
+	rho = np.corrcoef(a, b)
+	print(f"Correlation is: {rho[0,-1]}")
+
+	bestimmtheitsmass = rho**2
+	print(f"Bestimmtheitsmass is: {bestimmtheitsmass[0,-1]}")
+
+	model = np.polyfit(a, b, 1)
+
+	m, t = model
+
+	plt.plot(a, a * m + t, 'r')
+
+	plt.show()
+
 if __name__ == "__main__":
 	data = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 	show_data(data, 3)
@@ -46,3 +67,8 @@ if __name__ == "__main__":
 	vector = np.array([1, 2, 0])
 	magnitude = vector_magnitude(vector)
 	print(f"Magnitude of Vector {vector} is {magnitude}")
+
+	feet_size = np.array([42, 44, 45, 39, 40, 42, 42, 38, 44, 46])
+	height = np.array([1.8, 1.88, 1.92, 1.67, 1.74, 1.81, 1.78, 1.55, 1.86, 1.91])
+
+	scatter_with_linear_regression(feet_size, height, "Schuhgrösse", "Körpergrösse")
